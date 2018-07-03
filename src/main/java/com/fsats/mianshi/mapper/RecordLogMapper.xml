@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fsats.mianshi.dao.RecordLogMapper">
+    <resultMap id="basic" type="com.fsats.mianshi.entity.RecordLog">
+        <id property="id" column="id"/>
+        <result property="userId" column="userId"/>
+        <result property="type" column="type"/>
+        <result property="methodName" column="methodName"/>
+        <result property="recordDate" column="recordDate"/>
+        <result property="IPAddress" column="IPADDR"/>
+        <result property="errorCode" column="errorcode"/>
+        <result property="errorMessage" column="errorMessage"/>
+    </resultMap>
+
+    <insert id="insertLogger" parameterType="com.fsats.mianshi.entity.RecordLog">
+        INSERT INTO RECORDLOG
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id==null">
+                id,
+            </if>
+            <if test="userId!=null">
+                userId,
+            </if>
+            <if test="type!=null">
+                type,
+            </if>
+            <if test="methodName!=null">
+                methodName,
+            </if>
+            <if test="recordDate!=null">
+                recordDate,
+            </if>
+            <if test="IPAddress!=null">
+                IPADDR,
+            </if>
+            <if test="errorCode!=null">
+                errorCode,
+            </if>
+            <if test="errorMessage!=null">
+                errorMessage,
+            </if>
+        </trim>
+        <trim prefix="VALUES(" suffix=")" suffixOverrides=",">
+
+            <if test="id==null">
+                seq_loggs.nextval,
+            </if>
+            <if test="userId!=null">
+                #{userId},
+            </if>
+            <if test="type!=null">
+                #{type},
+            </if>
+            <if test="methodName!=null">
+                #{methodName},
+            </if>
+            <if test="recordDate!=null">
+                #{recordDate},
+            </if>
+            <if test="IPAddress!=null">
+                #{IPAddress},
+            </if>
+            <if test="errorCode!=null">
+                #{errorCode},
+            </if>
+            <if test="errorMessage!=null">
+                #{errorMessage},
+            </if>
+        </trim>
+    </insert>
+</mapper>
