@@ -29,7 +29,9 @@ public class TokenInterceptor extends HandlerInterceptorAdapter{
                     if (isRepeatSubmit(request)) {
                         LOG.warn("please don't repeat submit,url:"+ request.getServletPath());
                         //throw new RuntimeException("不能重复提交申请页面！");
-                        return false;
+                        response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, "Parameters illegal");
+                        System.out.println("------------已经send了");
+                        return true;
                     }
                     request.getSession(true).removeAttribute("token");
                 }

@@ -24,12 +24,12 @@
 
 
 
-    <!--<mvc:interceptors>
+    <mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
             <bean class="com.fsats.mianshi.interceptor.TokenInterceptor"/>
         </mvc:interceptor>
-    </mvc:interceptors>-->
+    </mvc:interceptors>
 
     <!--视图解析器配置-->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">

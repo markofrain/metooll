@@ -1,6 +1,7 @@
 package com.fsats.mianshi.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.fsats.mianshi.annotation.Token;
 import com.fsats.mianshi.entity.Users;
 import com.fsats.mianshi.service.UsersService;
 import com.google.gson.Gson;
@@ -16,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
@@ -30,10 +32,13 @@ public class UsersController {
     @Autowired
     private UsersService usersService;
 
+
     @RequestMapping("/login")
-    public String login(Model model){
+    public String login(Model model, HttpServletResponse response) throws IOException {
         model.addAttribute("users",new Users());
+
         //进入login页面，加载login页面所需数据
+
         return "login";
     }
 
@@ -47,6 +52,7 @@ public class UsersController {
      * @param model model对象
      * @return 失败返回请求到login，成功重定向到index
      */
+
     @RequestMapping(value = "/login/deal",method = RequestMethod.POST)
     public String login(@Valid Users users, BindingResult bindingResult,
                         Errors errors, Model model, HttpSession session, HttpServletRequest request){

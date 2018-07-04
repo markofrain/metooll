@@ -33,9 +33,7 @@
     <form:form id="login" modelAttribute="users" action="${pageContext.request.contextPath}/login/deal" method="post">
         <form:errors path="username"></form:errors><br/>
         <form:errors path="password"></form:errors><br/>
-        <%--<input type="hidden" name="token" value="${token}" />
-        <input type="text" name="name" value="admin" style="position: absolute;z-index: -1;" disabled autocomplete = "off"/>
-        <input type="password" name="pass" value=" " style="position: absolute;z-index: -1;" disabled autocomplete = "off"/>--%>
+        <%--<input type="hidden" name="token" value="${token}" />--%>
         <form:input path="username" autocomplete="off"/><br/>
         <form:password path="password" autocomplete="off"/>
         <input type="button" id="loginBtn" name="Login In" value="Login In" />
