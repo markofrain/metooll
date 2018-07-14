@@ -38,13 +38,13 @@ public class RecordLogger {
     /**
      * 织入点，不包含RecordService的其他方法
      */
-    @Pointcut("execution(* com.fsats.mianshi.service.*.*(..)) && !execution(* com.fsats.mianshi.service.RecordLogService.*(..))")
+    @Pointcut("execution(* com.fsats.mianshi.controller.*.*(..))")
     public void pointuct(){}
 
 
 
     @Around("pointuct()")
-    private Object around(ProceedingJoinPoint joinPoint) throws NoSuchMethodException {
+    private Object around(ProceedingJoinPoint joinPoint) throws Throwable {
         Object result = null;
         RecordLog recordLog = new RecordLog();
 
@@ -63,13 +63,29 @@ public class RecordLogger {
         Method method = joinPoint.getTarget().getClass().getMethod(joinPoint.getSignature().getName(),parameterType);
         if(null!=method){
             if (method.isAnnotationPresent(LoggsType.class)){
-                recordLog.setType(method.getAnnotation(LoggsType.class).type().getName());
+                String typename = method.getAnnotation(LoggsType.class).type().getName();
+                /*判断是否为OTHER的方法，则不进行添加日志*/
+                if(typename.equals("OTHER")){
+                    result = joinPoint.proceed();
+                    return result;
+                }else{
+                    recordLog.setType(method.getAnnotation(LoggsType.class).type().getName());
+                }
             }else{
                 recordLog.setType(null);
             }
         }else{
             recordLog.setType(null);
         }
+        /*if(null!=method){
+            if (method.isAnnotationPresent(LoggsType.class)){
+                recordLog.setType(method.getAnnotation(LoggsType.class).type().getName());
+            }else{
+                recordLog.setType("");
+            }
+        }else{
+            recordLog.setType("");
+        }*/
 
         recordLog.setRecordDate(new Date());
         recordLog.setIPAddress(request.getRemoteAddr());

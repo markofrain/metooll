@@ -2,7 +2,7 @@ package com.fsats.mianshi.entity;
 
 public enum LoggsTypeE {
 
-    INSERT("INSERT"),DELETE("DELETE"),UPDATE("UPDATE"),SELECT("SELECT");
+    INSERT("INSERT"),DELETE("DELETE"),UPDATE("UPDATE"),SELECT("SELECT"),OTHER("OTHER");
 
     LoggsTypeE(String name) {
         this.name = name;

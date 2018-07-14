@@ -1,7 +1,9 @@
 package com.fsats.mianshi.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.fsats.mianshi.annotation.LoggsType;
 import com.fsats.mianshi.annotation.Token;
+import com.fsats.mianshi.entity.LoggsTypeE;
 import com.fsats.mianshi.entity.Users;
 import com.fsats.mianshi.service.UsersService;
 import com.google.gson.Gson;
@@ -32,7 +34,7 @@ public class UsersController {
     @Autowired
     private UsersService usersService;
 
-
+    @LoggsType(type = LoggsTypeE.OTHER)
     @RequestMapping("/login")
     public String login(Model model, HttpServletResponse response) throws IOException {
         model.addAttribute("users",new Users());
@@ -52,7 +54,7 @@ public class UsersController {
      * @param model model对象
      * @return 失败返回请求到login，成功重定向到index
      */
-
+    @LoggsType(type = LoggsTypeE.SELECT)
     @RequestMapping(value = "/login/deal",method = RequestMethod.POST)
     public String login(@Valid Users users, BindingResult bindingResult,
                         Errors errors, Model model, HttpSession session, HttpServletRequest request){
@@ -82,6 +84,7 @@ public class UsersController {
      * @param username 用户名
      * @return ajax返回的数据
      */
+    @LoggsType(type = LoggsTypeE.OTHER)
     @ResponseBody
     @RequestMapping("register/checkname")
     public Object checkUsername(String username){
@@ -96,6 +99,7 @@ public class UsersController {
      * @param session
      * @return
      */
+    @LoggsType(type = LoggsTypeE.OTHER)
     @ResponseBody
     @RequestMapping("register/checkcode")
     public Object checkcode(String validateCode,HttpSession session){
@@ -108,6 +112,7 @@ public class UsersController {
         }
     }
 
+    @LoggsType(type = LoggsTypeE.OTHER)
     @RequestMapping("/register")
     public String register(Model model){
         model.addAttribute("user",new Users());
@@ -115,6 +120,7 @@ public class UsersController {
         return "register";
     }
 
+    @LoggsType(type = LoggsTypeE.INSERT)
     @RequestMapping("/register/deal")
     public String register(@Valid Users user,BindingResult result,Errors errors,HttpSession session,Model model){
         if(errors.hasErrors()){
@@ -131,6 +137,7 @@ public class UsersController {
 
     }
 
+    @LoggsType(type = LoggsTypeE.OTHER)
     @RequestMapping("/logout")
     public String logOut(HttpSession session){
         session.removeAttribute("user");
