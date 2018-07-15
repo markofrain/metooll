@@ -38,4 +38,12 @@ public interface UsersMapper {
      * @return
      */
     int addUser(@Param("username") String username,@Param("password") String password);
+
+    int editUser(Users users);
+
+    Users getUserById(@Param("id") Integer id);
+
+    String getpwdById(@Param("id") Integer id);
+
+    int editpwdById(@Param("id") Integer id,@Param("pwd") String pwd);
 }

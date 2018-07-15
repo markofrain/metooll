@@ -43,7 +43,7 @@ public class RecordLogger {
 
 
 
-    @Around("pointuct()")
+    //@Around("pointuct()")
     private Object around(ProceedingJoinPoint joinPoint) throws Throwable {
         Object result = null;
         RecordLog recordLog = new RecordLog();
@@ -101,6 +101,7 @@ public class RecordLogger {
             recordLog.setErrorMessage(throwable.getMessage());
 
             logger.info(joinPoint.getSignature().getName() + "方法异常通知执行");
+            throwable.printStackTrace();
         }finally {
             logger.info(joinPoint.getSignature().getName()+"结束执行");
             recordLogService.addLogger(recordLog);

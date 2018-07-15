@@ -40,12 +40,38 @@ public class UsersServiceImpl implements UsersService {
         }
 
     }
+
     @Override
     public boolean addUser(String name, String password) {
         if(name.equals("")||password.equals("")){
             return false;
         }
         int count = usersMapper.addUser(name,password);
+        return count>0?true:false;
+    }
+
+
+    @Override
+    public boolean editUser(Users user) {
+        int count = usersMapper.editUser(user);
+
+        return count>0?true:false;
+    }
+
+    @Override
+    public Users getUser(Integer id) {
+        return usersMapper.getUserById(id);
+    }
+
+    @Override
+    public String getPwd(Integer id) {
+        String pwd = usersMapper.getpwdById(id);
+        return pwd!=null?pwd:"";
+    }
+
+    @Override
+    public boolean editPwd(Integer id, String pwd) {
+        int count = usersMapper.editpwdById(id, pwd);
         return count>0?true:false;
     }
 }

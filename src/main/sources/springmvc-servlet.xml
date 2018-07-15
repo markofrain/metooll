@@ -9,7 +9,7 @@
     <mvc:resources mapping="/statics/**" location="/statics/"/>
     <import resource="applicationContext.xml"/>
 
-    <bean id="conversion-Service" class="org.springframework.format.support.FormattingConversionService"></bean>
+    <!--<bean id="conversion-Service" class="org.springframework.format.support.FormattingConversionService"></bean>-->
     <bean id="validateMessageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
         <property name="basename" value="classpath:ValidationMessages"/>
         <property name="fileEncodings" value="utf-8"/>
@@ -20,9 +20,20 @@
         <property name="validationMessageSource" ref="validateMessageSource"/>
     </bean>
 
-    <mvc:annotation-driven conversion-service="conversion-Service" validator="validator" />
+    <mvc:annotation-driven conversion-service="myConversionService" validator="validator" />
 
+    <!-- 配置ConversionServiceFactoryBean,数据类型转换器 -->
+    <bean id="myConversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
+        <property name="converters">
+            <set>
+                <!-- 引入自己配置的自定义转换器，将String类型转换为Date日期 -->
+                <bean class="com.fsats.mianshi.converter.MyConversionDateToString">
+                    <constructor-arg name="patten" value="yyyy-MM-dd"/>
+                </bean>
 
+            </set>
+        </property>
+    </bean>
 
     <!--<mvc:interceptors>
         <mvc:interceptor>

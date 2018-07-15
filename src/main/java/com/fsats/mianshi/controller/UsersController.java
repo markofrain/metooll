@@ -7,6 +7,7 @@ import com.fsats.mianshi.entity.LoggsTypeE;
 import com.fsats.mianshi.entity.Users;
 import com.fsats.mianshi.service.UsersService;
 import com.google.gson.Gson;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.jws.WebParam;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,9 +36,15 @@ public class UsersController {
     @Autowired
     private UsersService usersService;
 
+    /**
+     * 进入登录页面，需要准备登录页面的信息
+     * @param model 数据对象
+     * @return login页面
+     * @throws IOException
+     */
     @LoggsType(type = LoggsTypeE.OTHER)
     @RequestMapping("/login")
-    public String login(Model model, HttpServletResponse response) throws IOException {
+    public String login(Model model){
         model.addAttribute("users",new Users());
 
         //进入login页面，加载login页面所需数据
@@ -95,8 +103,8 @@ public class UsersController {
 
     /**
      * 检查验证码是否正确
-     * @param validateCode
-     * @param session
+     * @param validateCode 传递来的验证码
+     * @param session session会话对象
      * @return
      */
     @LoggsType(type = LoggsTypeE.OTHER)
@@ -112,6 +120,11 @@ public class UsersController {
         }
     }
 
+    /**
+     * 注册方法，进入注册页面
+     * @param model 数据对象
+     * @return 注册页面
+     */
     @LoggsType(type = LoggsTypeE.OTHER)
     @RequestMapping("/register")
     public String register(Model model){
@@ -120,6 +133,15 @@ public class UsersController {
         return "register";
     }
 
+    /**
+     * 注册方法
+     * @param user 传来的要新增的用户对象
+     * @param result 绑定结果对象
+     * @param errors 数据校验的错误对象
+     * @param session session会话对象
+     * @param model 数据对象
+     * @return
+     */
     @LoggsType(type = LoggsTypeE.INSERT)
     @RequestMapping("/register/deal")
     public String register(@Valid Users user,BindingResult result,Errors errors,HttpSession session,Model model){
@@ -137,11 +159,95 @@ public class UsersController {
 
     }
 
+    /**
+     * 用户登出
+     * @param session session会话对象
+     * @return
+     */
     @LoggsType(type = LoggsTypeE.OTHER)
     @RequestMapping("/logout")
     public String logOut(HttpSession session){
         session.removeAttribute("user");
         return "redirect:/index";
+    }
+
+    /**
+     * 显示用户信息，通过session中的user显示
+     * @param model
+     * @param session
+     * @return
+     */
+    @LoggsType(type = LoggsTypeE.OTHER)
+    @RequestMapping("/center/userinfo")
+    public String showUserInfo(Model model,HttpSession session){
+
+        return "user/myinfo";
+    }
+
+    /**
+     * 进入编辑页面
+     * @return
+     */
+    @LoggsType(type = LoggsTypeE.OTHER)
+    @RequestMapping("/center/edit-user")
+    public String editUser(Model model,HttpSession session){
+        model.addAttribute("user", session.getAttribute("user"));
+        return "user/edituser";
+    }
+
+    /**
+     * 进行用户更新
+     * @param user
+     * @return
+     */
+    @LoggsType(type = LoggsTypeE.UPDATE)
+    @RequestMapping("/center/edit-user/deal")
+    public String editUser(Users user,HttpSession session,Model model){
+        String message = "";
+        Integer userId = ((Users)session.getAttribute("user")).getId();
+        user.setId(userId);
+        boolean flag = usersService.editUser(user);
+
+        if(flag){
+            message = "保存成功";
+            Users nowuser = usersService.getUser(userId);
+            model.addAttribute("user", nowuser);
+            session.setAttribute("user", nowuser);
+            System.out.println("-----------"+nowuser);
+        }else{
+            message = "保存失败";
+        }
+        model.addAttribute("message", message);
+
+        return "user/edituser";
+    }
+
+    @LoggsType(type = LoggsTypeE.OTHER)
+    @RequestMapping("/center/edit-pwd")
+    public String editpwd(){
+        return "user/editpwd";
+    }
+
+    /**
+     * 更改用户密码
+     * 从session中获得id并查询出密码与原密码比较
+     * @param ypwd 原密码
+     * @param npwd 新密码
+     * @return
+     */
+    @LoggsType(type = LoggsTypeE.UPDATE)
+    @RequestMapping("/center/edit-pwd/deal")
+    public String editpwd(@Param("ypwd") String ypwd, @Param("npwd") String npwd,HttpSession session,Model model){
+        String message = "";
+        Users user = (Users) session.getAttribute("user");
+        if(!usersService.getPwd(user.getId()).equals(ypwd)){
+            message = "原密码错误!";
+        }else{
+            boolean flag = usersService.editPwd(user.getId(), npwd);
+            message="修改成功!";
+        }
+        model.addAttribute("message", message);
+        return "user/editpwd";
     }
 
 }

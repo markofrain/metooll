@@ -24,8 +24,39 @@
         select count(1) from USERS WHERE USERNAME=#{username}
     </select>
 
+    <select id="getUserById" resultMap="basic" parameterType="int">
+        select * from USERS where id=#{id}
+    </select>
+
+    <select id="getpwdById" parameterType="int" resultType="string">
+        select PASSWORD from USERS where ID=#{id}
+    </select>
+
     <insert id="addUser" parameterType="string">
         INSERT INTO USERS(ID,USERNAME,PASSWORD) VALUES (SEQ_USER.nextval,#{username},#{password})
     </insert>
+
+    <update id="editUser" parameterType="com.fsats.mianshi.entity.Users">
+        update USERS
+        <set>
+            <if test="realName!=null">
+                realName = #{realName},
+            </if>
+            <if test="email!=null">
+                email = #{email},
+            </if>
+            <if test="phone!=null">
+                phone=#{phone},
+            </if>
+            <if test="dateOfBirth!=null">
+                dateOfBirth=#{dateOfBirth},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <update id="editpwdById">
+        update USERS set PASSWORD=#{pwd} where ID=#{id}
+    </update>
 
 </mapper>
