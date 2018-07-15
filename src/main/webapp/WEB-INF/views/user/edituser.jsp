@@ -84,13 +84,13 @@
             </div>
             <input type="button" value="保存">
         </form>
-    </div
+    </div>
 
 
 
     <script type="text/javascript">
         setTimeout(function(){
-            document.getElementsByName("infomessage").innerHTML="";
+            document.getElementsByName("infomessage")[0].innerHTML="";
         },3000);
     </script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/statics/jeDate/test.js"></script>

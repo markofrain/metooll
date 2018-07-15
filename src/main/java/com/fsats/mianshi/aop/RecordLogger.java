@@ -38,12 +38,12 @@ public class RecordLogger {
     /**
      * 织入点，不包含RecordService的其他方法
      */
-    @Pointcut("execution(* com.fsats.mianshi.controller.*.*(..))")
+    @Pointcut("execution(* com.fsats.mianshi.controller..*.*(..))")
     public void pointuct(){}
 
 
 
-    //@Around("pointuct()")
+    @Around("pointuct()")
     private Object around(ProceedingJoinPoint joinPoint) throws Throwable {
         Object result = null;
         RecordLog recordLog = new RecordLog();
@@ -104,8 +104,8 @@ public class RecordLogger {
             throwable.printStackTrace();
         }finally {
             logger.info(joinPoint.getSignature().getName()+"结束执行");
-            recordLogService.addLogger(recordLog);
-
+            boolean count = recordLogService.addLogger(recordLog);
+            System.out.println("------------"+count);
         }
 
         return result;
